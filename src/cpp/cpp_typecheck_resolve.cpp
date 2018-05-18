@@ -170,7 +170,7 @@ void cpp_typecheck_resolvet::remove_duplicates(
 
     if(it->id()==ID_symbol)
       id = to_symbol_expr(*it).get_identifier();
-    else if(it->id()==ID_type && it->type().id()==ID_symbol)
+    else if(it->id() == ID_type && it->type().id() == ID_symbol_type)
       id = to_symbol_type(it->type()).get_identifier();
 
     if(id=="")
@@ -353,7 +353,7 @@ exprt cpp_typecheck_resolvet::convert_identifier(
       typet followed_type=symbol.type;
       bool constant=followed_type.get_bool(ID_C_constant);
 
-      while(followed_type.id()==ID_symbol)
+      while(followed_type.id() == ID_symbol_type)
       {
         followed_type =
           cpp_typecheck.follow(to_symbol_type(followed_type));
@@ -2244,7 +2244,8 @@ void cpp_typecheck_resolvet::filter_for_named_scopes(
         assert(pcomp.get_bool(ID_is_type));
         const typet &type=pcomp.type();
         assert(type.id()!=ID_struct);
-        if(type.id()==ID_symbol)
+
+        if(type.id() == ID_symbol_type)
           identifier = to_symbol_type(type).get_identifier();
         else
           continue;
@@ -2266,7 +2267,7 @@ void cpp_typecheck_resolvet::filter_for_named_scopes(
           new_set.insert(&class_id);
           break;
         }
-        else if(symbol.type.id()==ID_symbol)
+        else if(symbol.type.id() == ID_symbol_type)
           identifier = to_symbol_type(symbol.type).get_identifier();
         else
           break;
@@ -2309,7 +2310,7 @@ void cpp_typecheck_resolvet::filter_for_named_scopes(
       if(e.id()!=ID_type)
         continue; // expressions are definitively not a scope
 
-      if(e.type().id()==ID_symbol)
+      if(e.type().id() == ID_symbol_type)
       {
         symbol_typet type=to_symbol_type(e.type());
 
@@ -2320,7 +2321,7 @@ void cpp_typecheck_resolvet::filter_for_named_scopes(
           const symbolt &symbol=cpp_typecheck.lookup(identifier);
           assert(symbol.is_type);
 
-          if(symbol.type.id()==ID_symbol)
+          if(symbol.type.id() == ID_symbol_type)
             type=to_symbol_type(symbol.type);
           else if(symbol.type.id()==ID_struct ||
                   symbol.type.id()==ID_incomplete_struct ||
